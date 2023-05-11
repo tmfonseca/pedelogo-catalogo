@@ -12,7 +12,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    dockerapp = docker.build("tmfonseca/api-produto:${env.BUILD}",'-f ./src/Pedelogo.Catalogo.Api/Dockerfile .')
+                    dockerapp = docker.build("tmfonseca/api-produto:${env.BUILD_ID}",'-f ./src/Pedelogo.Catalogo.Api/Dockerfile .')
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker') {
                         dockerapp.push('latest')
-                        dockerapp.push("${env.BUILD}")
+                        dockerapp.push("${env.BUILD_ID}")
                     }
                 }
             }
