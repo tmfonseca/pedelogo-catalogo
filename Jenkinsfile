@@ -29,7 +29,21 @@ pipeline {
             }
         }
 
-
+        stage('Deploy Kubernetes') {
+            enviroment {
+                tag_version = "${env.BUIL_ID}"
+            }
+            steps {
+                script {
+                    sh 'sed -i "s/{{tag}}/$tag_version/g" ./k8s/api/api-deploy.yaml'
+                    sh 'cat ./k8s/api/api-deploy.yaml'
+                    kubeconfig(credentialsId: 'kubeconfigfile', serverUrl: '') {
+                        sh 'kubectl apply -f ./k8s/ -R'
+                    }
+                }
+            }
+        }
+        
 
     }
 }
